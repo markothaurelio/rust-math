@@ -1,3 +1,5 @@
+use crate::stats::median_unchecked;
+
 pub fn range_unchecked(xs: &[f64]) -> f64 {
     let min = xs.iter().copied().fold(f64::INFINITY,  |acc, x| f64::min(acc, x));
     let max = xs.iter().copied().fold(f64::NEG_INFINITY,  |acc, x| f64::max(acc, x));
@@ -7,37 +9,23 @@ pub fn range_unchecked(xs: &[f64]) -> f64 {
 
 pub fn iqr_unchecked(xs: &[f64]) -> f64 {
     let mut v = xs.to_vec();
-    v.sort_by(|a,b| a.partial_cmp(b).unwrap());
+    v.sort_by(f64::total_cmp);
 
-    let q1 = quantile_linear_unchecked(&v, 0.25);
-    let q3 = quantile_linear_unchecked(&v, 0.75);
+    let mid = v.len() / 2;
+    println!("mid  = {}", mid);
+
+    let lower = &v[..mid];
+    let upper = &v[mid..];
+
+    println!("lower  = {:?}", lower);
+    println!("upper  = {:?}", upper);
+
+    let q1 = median_unchecked(&lower);
+    let q3 = median_unchecked(&upper);
+
+    println!("q1 = {:?}", q1);
+    println!("q3 = {:?}", q3);
 
     q3-q1
-}
 
-fn quantile_linear_unchecked(sorted: &[f64], p: f64) -> f64 {
-    let n = sorted.len();
-
-    if n == 1 {
-        return sorted[0];
-    }
-
-    let idx = p * (n as f64 - 1.0);
-    let lo = idx as usize;              // floor
-    let hi = (idx.ceil()) as usize;
-
-    println!("idx = {}", idx);
-    println!("low = {}", lo);
-    println!("high = -{}", hi);
-
-    if lo == hi {
-        unsafe { *sorted.get_unchecked(lo) }
-    } else {
-        let w = idx - lo as f64;
-        unsafe {
-            let a = *sorted.get_unchecked(lo);
-            let b = *sorted.get_unchecked(hi);
-            a * (1.0 - w) + b * w
-        }
-    }
 }
