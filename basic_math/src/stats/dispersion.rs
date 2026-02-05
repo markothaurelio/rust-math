@@ -14,17 +14,14 @@ pub fn iqr_unchecked(xs: &[f64]) -> f64 {
     let mid = v.len() / 2;
     println!("mid  = {}", mid);
 
-    let lower = &v[..mid];
-    let upper = &v[mid..];
-
-    println!("lower  = {:?}", lower);
-    println!("upper  = {:?}", upper);
+    let (lower, upper) = if v.len() % 2 == 0 {
+        (&v[..mid], &v[mid..])
+    } else {
+        (&v[..mid], &v[mid + 1..]) // skip the median
+    };
 
     let q1 = median_unchecked(&lower);
     let q3 = median_unchecked(&upper);
-
-    println!("q1 = {:?}", q1);
-    println!("q3 = {:?}", q3);
 
     q3-q1
 
