@@ -24,5 +24,6 @@ fn main() {
 
 //    println!("dot  = {}", linear::dot(&v, &v));
 
+    println!("Sample Variance = {}", stats::sample_variance_unchecked(&v_iqr));
 
 }
