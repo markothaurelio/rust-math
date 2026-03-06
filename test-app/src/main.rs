@@ -38,6 +38,21 @@ fn main() {
     println!("Recall {}", stats::recall(&ys, &ys_h));
     println!("specificity {}", stats::specificity(&ys, &ys_h));
     println!("F1 Score {}", stats::f1_score(&ys, &ys_h, stats::Average::Binary));
-    
+
+
+
+    //let p = vec![0.25, 0.25, 0.25, 0.25];
+    //let q = vec![0.25, 0.25, 0.25, 0.25];
+    let p = vec![0.9, 0.1];
+    let q = vec![0.5, 0.5];
+
+
+    println!("KL(P || Q) = {}", stats::kl_divergence_unchecked(&p, &q));
+    println!("TVD = {}", stats::total_variation_distance_unchecked(&p, &q));
+
+    let train_positive = 0.70;
+    let test_positive = 0.50;
+
+    println!("DPL = {}", stats::difference_in_proportions_of_labels(train_positive, test_positive));
 
 }
